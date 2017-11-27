@@ -17,4 +17,8 @@
     [super viewWillDisappear:animated];
 }
 
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscape;
+};
+
 @end
