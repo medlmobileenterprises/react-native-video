@@ -18,7 +18,7 @@
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscape;
+    return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscape;
 };
 
 @end
