@@ -54,6 +54,8 @@ import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.lang.Math;
 
+import static android.app.Activity.RESULT_OK;
+
 @SuppressLint("ViewConstructor")
 class ReactExoplayerView extends FrameLayout implements
         LifecycleEventListener,
@@ -122,6 +124,17 @@ class ReactExoplayerView extends FrameLayout implements
             }
         }
     };
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        this.themedReactContext.onActivityResult(themedReactContext.getCurrentActivity(),
+                requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                String timestamp = data.getStringExtra("TIMESTAMP");
+                Log.e("T:", timestamp);
+            }
+        }
+    }
 
     public ReactExoplayerView(ThemedReactContext context) {
         super(context);
@@ -391,6 +404,24 @@ class ReactExoplayerView extends FrameLayout implements
     }
 
     // ExoPlayer.EventListener implementation
+    @Override
+    public void onPositionDiscontinuity(int i) {
+        if (playerNeedsSource) {
+            // This will only occur if the user has performed a seek whilst in the error state. Update the
+            // resume position so that if the user then retries, playback will resume from the position to
+            // which they seeked.
+            updateResumePosition();
+        }
+    }
+
+    @Override
+    public void onSeekProcessed() {}
+
+    @Override
+    public void onRepeatModeChanged(int i) {}
+
+    @Override
+    public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {}
 
     @Override
     public void onLoadingChanged(boolean isLoading) {
@@ -452,16 +483,6 @@ class ReactExoplayerView extends FrameLayout implements
             eventEmitter.buffering(true);
         } else {
             eventEmitter.buffering(false);
-        }
-    }
-
-    @Override
-    public void onPositionDiscontinuity() {
-        if (playerNeedsSource) {
-            // This will only occur if the user has performed a seek whilst in the error state. Update the
-            // resume position so that if the user then retries, playback will resume from the position to
-            // which they seeked.
-            updateResumePosition();
         }
     }
 
@@ -609,8 +630,10 @@ class ReactExoplayerView extends FrameLayout implements
 
     public void setFullscreenPlayer(boolean fullscreen) {
         if (fullscreen) {
-            Intent i = new Intent(getContext(), CustomFullscreenPlayer.class);
-            getContext().startActivity(i);
+            Intent intent = new Intent(getContext(), CustomFullscreenPlayer.class);
+            intent.putExtra("URI", this.srcUri.toString());
+            intent.putExtra("TIMESTAMP", this.player.getCurrentPosition());
+            themedReactContext.startActivityForResult(intent, 1, null);
         }
     }
 

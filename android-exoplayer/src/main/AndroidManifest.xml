@@ -1,3 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.brentvatne.react">
+    <application
+        android:allowBackup="true"
+        android:supportsRtl="true">
+        <activity
+            android:name="com.brentvatne.exoplayer.CustomFullscreenPlayer"
+            android:launchMode="singleTask">
+        </activity>
+    </application>
 </manifest>

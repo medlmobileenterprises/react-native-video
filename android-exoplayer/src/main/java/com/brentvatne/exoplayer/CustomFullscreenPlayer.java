@@ -1,6 +1,8 @@
 package com.brentvatne.exoplayer;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -24,13 +26,27 @@ public class CustomFullscreenPlayer extends Activity {
 
     private SimpleExoPlayer player;
     private SimpleExoPlayerView simpleExoPlayerView;
-    private String videoUrl = "http://www.google.com/mp4";
+    private long timestamp;
+    private Uri videoUrl;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_fullscreen_player);
+
+        Intent intent = getIntent();
+        videoUrl = Uri.parse(intent.getStringExtra("URI"));
+        timestamp = intent.getLongExtra("TIMESTAMP", 0);
+
         this.simpleExoPlayerView = (SimpleExoPlayerView) findViewById(R.id.simpleExoPlayerView);
         this.createExoPlayer();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("TIMESTAMP", player.getCurrentPosition());
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     private void createExoPlayer() {
@@ -51,8 +67,9 @@ public class CustomFullscreenPlayer extends Activity {
                 Util.getUserAgent(this, "android-exoplayer"), bandwidthMeter);
 
         MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
-                .createMediaSource("http://www.youtube.com");
-        player.prepare(videoSource);
+                .createMediaSource(this.videoUrl);
+        player.seekTo(player.getCurrentWindowIndex(), timestamp);
+        player.prepare(videoSource, false, true);
+        player.setPlayWhenReady(true);
     }
-
 }

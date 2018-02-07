@@ -197,11 +197,6 @@ public final class ExoPlayerView extends FrameLayout {
         // ExoPlayer.EventListener implementation
 
         @Override
-        public void onLoadingChanged(boolean isLoading) {
-            // Do nothing.
-        }
-
-        @Override
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
             // Do nothing.
         }
@@ -212,7 +207,19 @@ public final class ExoPlayerView extends FrameLayout {
         }
 
         @Override
-        public void onPositionDiscontinuity() {
+        public void onPositionDiscontinuity(int i) {}
+
+        @Override
+        public void onSeekProcessed() {}
+
+        @Override
+        public void onRepeatModeChanged(int i) {}
+
+        @Override
+        public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {}
+
+        @Override
+        public void onLoadingChanged(boolean isLoading) {
             // Do nothing.
         }
 

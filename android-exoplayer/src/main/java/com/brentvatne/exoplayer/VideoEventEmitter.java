@@ -108,6 +108,8 @@ class VideoEventEmitter {
 
     private static final String EVENT_PROP_TIMED_METADATA = "metadata";
 
+    private static final String EVENT_PROP_FULLSCREEN_ON = "fullscreenOn";
+
 
     void setViewId(int viewId) {
         this.viewId = viewId;
