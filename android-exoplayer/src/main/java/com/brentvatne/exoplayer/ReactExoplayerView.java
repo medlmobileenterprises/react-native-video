@@ -2,6 +2,7 @@ package com.brentvatne.exoplayer;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Handler;
@@ -603,6 +604,13 @@ class ReactExoplayerView extends FrameLayout implements
     public void setMutedModifier(boolean muted) {
         if (player != null) {
             player.setVolume(muted ? 0 : 1);
+        }
+    }
+
+    public void setFullscreenPlayer(boolean fullscreen) {
+        if (fullscreen) {
+            Intent i = new Intent(getContext(), CustomFullscreenPlayer.class);
+            getContext().startActivity(i);
         }
     }
 
