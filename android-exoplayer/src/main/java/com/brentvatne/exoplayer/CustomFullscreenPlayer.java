@@ -43,10 +43,10 @@ public class CustomFullscreenPlayer extends Activity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.putExtra("TIMESTAMP", player.getCurrentPosition());
-        setResult(RESULT_OK, intent);
-        finish();
+        player.clearVideoSurface();
+        player.release();
+        ReactExoplayerView.FULLSCREEN_TIMESTAMP = player.getCurrentPosition();
+        this.finish();
     }
 
     private void createExoPlayer() {

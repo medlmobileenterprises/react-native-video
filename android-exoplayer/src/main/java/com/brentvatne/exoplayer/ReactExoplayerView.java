@@ -64,6 +64,8 @@ class ReactExoplayerView extends FrameLayout implements
         AudioManager.OnAudioFocusChangeListener,
         MetadataRenderer.Output {
 
+    public static long FULLSCREEN_TIMESTAMP = 0;
+
     private static final String TAG = "ReactExoplayerView";
 
     private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
@@ -188,6 +190,9 @@ class ReactExoplayerView extends FrameLayout implements
 
     @Override
     public void onHostResume() {
+        if (FULLSCREEN_TIMESTAMP != 0 && FULLSCREEN_TIMESTAMP > player.getCurrentPosition()) {
+            player.seekTo(FULLSCREEN_TIMESTAMP);
+        }
         if (playInBackground) {
             return;
         }
@@ -659,7 +664,6 @@ class ReactExoplayerView extends FrameLayout implements
           player.setPlaybackParameters(params);
       }
     }
-
 
     public void setPlayInBackground(boolean playInBackground) {
         this.playInBackground = playInBackground;
