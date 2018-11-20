@@ -28,6 +28,8 @@ public class CustomFullscreenPlayer extends Activity {
     private SimpleExoPlayerView simpleExoPlayerView;
     private long timestamp;
     private Uri videoUrl;
+    private Handler positionHandler;
+    private Runnable positionCallback;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +49,12 @@ public class CustomFullscreenPlayer extends Activity {
         player.release();
         ReactExoplayerView.FULLSCREEN_TIMESTAMP = player.getCurrentPosition();
         this.finish();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.stopTracking();
     }
 
     private void createExoPlayer() {
@@ -75,14 +83,19 @@ public class CustomFullscreenPlayer extends Activity {
     }
 
     private void trackPosition() {
-        Handler positionHandler = new Handler();
-        positionHandler.postDelayed(new Runnable() {
+        positionHandler = new Handler();
+        positionCallback = new Runnable() {
             @Override
             public void run() {
                 long newTimestamp = player.getCurrentPosition();
                 getIntent().putExtra("TIMESTAMP", newTimestamp);
                 trackPosition();
             }
-        }, 1000);
+        };
+        positionHandler.postDelayed(positionCallback, 1000);
+    }
+
+    private void stopTracking() {
+        positionHandler.removeCallbacks(positionCallback);
     }
 }
