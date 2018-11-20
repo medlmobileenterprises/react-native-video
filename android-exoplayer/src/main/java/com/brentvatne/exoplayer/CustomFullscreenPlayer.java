@@ -59,6 +59,7 @@ public class CustomFullscreenPlayer extends Activity {
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
         this.simpleExoPlayerView.setPlayer(player);
         this.prepareMediaSource();
+        this.trackPosition();
     }
 
     private void prepareMediaSource() {
@@ -71,5 +72,17 @@ public class CustomFullscreenPlayer extends Activity {
         player.seekTo(player.getCurrentWindowIndex(), timestamp);
         player.prepare(videoSource, false, true);
         player.setPlayWhenReady(true);
+    }
+
+    private void trackPosition() {
+        Handler positionHandler = new Handler();
+        positionHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                long newTimestamp = player.getCurrentPosition();
+                getIntent().putExtra("TIMESTAMP", newTimestamp);
+                trackPosition();
+            }
+        }, 1000);
     }
 }
