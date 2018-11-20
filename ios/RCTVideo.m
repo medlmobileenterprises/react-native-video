@@ -801,7 +801,6 @@ static NSString *const timedMetadata = @"timedMetadata";
   [super layoutSubviews];
   if( _controls )
   {
-    _playerViewController.view.frame = self.bounds;
 
     // also adjust all subviews of contentOverlayView
     for (UIView* subview in _playerViewController.contentOverlayView.subviews) {
