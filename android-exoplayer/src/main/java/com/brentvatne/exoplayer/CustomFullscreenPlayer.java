@@ -28,6 +28,8 @@ public class CustomFullscreenPlayer extends Activity {
     private SimpleExoPlayerView simpleExoPlayerView;
     private long timestamp;
     private Uri videoUrl;
+    private Handler positionHandler;
+    private Runnable positionCallback;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +51,12 @@ public class CustomFullscreenPlayer extends Activity {
         this.finish();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.stopTracking();
+    }
+
     private void createExoPlayer() {
         Handler mainHandler = new Handler();
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
@@ -59,6 +67,7 @@ public class CustomFullscreenPlayer extends Activity {
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
         this.simpleExoPlayerView.setPlayer(player);
         this.prepareMediaSource();
+        this.trackPosition();
     }
 
     private void prepareMediaSource() {
@@ -71,5 +80,26 @@ public class CustomFullscreenPlayer extends Activity {
         player.seekTo(player.getCurrentWindowIndex(), timestamp);
         player.prepare(videoSource, false, true);
         player.setPlayWhenReady(true);
+    }
+
+    private void trackPosition() {
+        if (positionHandler == null) {
+            positionHandler = new Handler();
+        }
+        if (positionCallback == null) {
+            positionCallback = new Runnable() {
+                @Override
+                public void run() {
+                    long newTimestamp = player.getCurrentPosition();
+                    getIntent().putExtra("TIMESTAMP", newTimestamp);
+                    trackPosition();
+                }
+            };
+        }
+        positionHandler.postDelayed(positionCallback, 1000);
+    }
+
+    private void stopTracking() {
+        positionHandler.removeCallbacks(positionCallback);
     }
 }
