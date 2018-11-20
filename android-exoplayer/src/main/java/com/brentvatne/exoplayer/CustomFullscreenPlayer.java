@@ -83,15 +83,19 @@ public class CustomFullscreenPlayer extends Activity {
     }
 
     private void trackPosition() {
-        positionHandler = new Handler();
-        positionCallback = new Runnable() {
-            @Override
-            public void run() {
-                long newTimestamp = player.getCurrentPosition();
-                getIntent().putExtra("TIMESTAMP", newTimestamp);
-                trackPosition();
-            }
-        };
+        if (positionHandler == null) {
+            positionHandler = new Handler();
+        }
+        if (positionCallback == null) {
+            positionCallback = new Runnable() {
+                @Override
+                public void run() {
+                    long newTimestamp = player.getCurrentPosition();
+                    getIntent().putExtra("TIMESTAMP", newTimestamp);
+                    trackPosition();
+                }
+            };
+        }
         positionHandler.postDelayed(positionCallback, 1000);
     }
 
