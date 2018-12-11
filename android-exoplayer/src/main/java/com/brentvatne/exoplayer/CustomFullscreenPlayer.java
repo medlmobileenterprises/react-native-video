@@ -55,6 +55,8 @@ public class CustomFullscreenPlayer extends Activity {
     public void onDestroy() {
         super.onDestroy();
         this.stopTracking();
+        player.clearVideoSurface();
+        player.release();
     }
 
     private void createExoPlayer() {
