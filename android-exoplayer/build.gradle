@@ -1,20 +1,27 @@
 apply plugin: 'com.android.library'
 
+def safeExtGet(prop, fallback) {
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
+
 android {
-    compileSdkVersion 23
-    buildToolsVersion "25.0.2"
+    compileSdkVersion safeExtGet('compileSdkVersion', 27)
+    buildToolsVersion safeExtGet('buildToolsVersion', '27.0.3')
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 23
+        minSdkVersion safeExtGet('minSdkVersion', 16)
+        targetSdkVersion safeExtGet('targetSdkVersion', 27)
+        versionCode 1
+        versionName "1.0"
     }
 }
 
 dependencies {
-    provided 'com.facebook.react:react-native:+'
-    compile 'com.google.android.exoplayer:exoplayer:2.6.1'
-    compile('com.google.android.exoplayer:extension-okhttp:2.6.1') {
+    //noinspection GradleDynamicVersion
+    provided "com.facebook.react:react-native:${safeExtGet('reactNativeVersion', '+')}"
+    compile 'com.google.android.exoplayer:exoplayer:2.7.3'
+    compile('com.google.android.exoplayer:extension-okhttp:2.7.3') {
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
-    compile 'com.squareup.okhttp3:okhttp:3.4.2'
+    compile 'com.squareup.okhttp3:okhttp:3.9.1'
 }
