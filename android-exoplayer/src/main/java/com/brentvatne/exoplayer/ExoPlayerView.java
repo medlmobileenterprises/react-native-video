@@ -31,7 +31,7 @@ import java.util.List;
 @TargetApi(16)
 public final class ExoPlayerView extends FrameLayout {
 
-    private final View surfaceView;
+    private View surfaceView;
     private final View shutterView;
     private final SubtitleView subtitleLayout;
     private final AspectRatioFrameLayout layout;
@@ -224,11 +224,6 @@ public final class ExoPlayerView extends FrameLayout {
         // ExoPlayer.EventListener implementation
 
         @Override
-        public void onLoadingChanged(boolean isLoading) {
-            // Do nothing.
-        }
-
-        @Override
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
             // Do nothing.
         }
@@ -240,15 +235,6 @@ public final class ExoPlayerView extends FrameLayout {
 
         @Override
         public void onPositionDiscontinuity(int i) {}
-
-        @Override
-        public void onSeekProcessed() {}
-
-        @Override
-        public void onRepeatModeChanged(int i) {}
-
-        @Override
-        public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {}
 
         @Override
         public void onLoadingChanged(boolean isLoading) {

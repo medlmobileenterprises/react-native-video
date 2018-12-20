@@ -425,7 +425,7 @@ class ReactExoplayerView extends FrameLayout implements
 
     private void onStopPlayback() {
         if (isFullscreen) {
-            setFullscreen(false);
+            setFullscreenPlayer(false);
         }
         setKeepScreenOn(false);
         audioManager.abandonAudioFocus(this);
@@ -485,26 +485,6 @@ class ReactExoplayerView extends FrameLayout implements
     public void onAudioBecomingNoisy() {
         eventEmitter.audioBecomingNoisy();
     }
-
-    // ExoPlayer.EventListener implementation
-    @Override
-    public void onPositionDiscontinuity(int i) {
-        if (playerNeedsSource) {
-            // This will only occur if the user has performed a seek whilst in the error state. Update the
-            // resume position so that if the user then retries, playback will resume from the position to
-            // which they seeked.
-            updateResumePosition();
-        }
-    }
-
-    @Override
-    public void onSeekProcessed() {}
-
-    @Override
-    public void onRepeatModeChanged(int i) {}
-
-    @Override
-    public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {}
 
     @Override
     public void onLoadingChanged(boolean isLoading) {
@@ -946,39 +926,6 @@ class ReactExoplayerView extends FrameLayout implements
 
     public void setDisableFocus(boolean disableFocus) {
         this.disableFocus = disableFocus;
-    }
-
-    public void setFullscreen(boolean fullscreen) {
-        if (fullscreen == isFullscreen) {
-            return; // Avoid generating events when nothing is changing
-        }
-        isFullscreen = fullscreen;
-
-        Activity activity = themedReactContext.getCurrentActivity();
-        if (activity == null) {
-            return;
-        }
-        Window window = activity.getWindow();
-        View decorView = window.getDecorView();
-        int uiOptions;
-        if (isFullscreen) {
-            if (Util.SDK_INT >= 19) { // 4.4+
-                uiOptions = SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                        | SYSTEM_UI_FLAG_FULLSCREEN;
-            } else {
-                uiOptions = SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | SYSTEM_UI_FLAG_FULLSCREEN;
-            }
-            eventEmitter.fullscreenWillPresent();
-            decorView.setSystemUiVisibility(uiOptions);
-            eventEmitter.fullscreenDidPresent();
-        } else {
-            uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
-            eventEmitter.fullscreenWillDismiss();
-            decorView.setSystemUiVisibility(uiOptions);
-            eventEmitter.fullscreenDidDismiss();
-        }
     }
 
     public void setUseTextureView(boolean useTextureView) {
