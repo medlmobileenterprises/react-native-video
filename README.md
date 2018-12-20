@@ -52,7 +52,7 @@ Note: you can also use the `ignoreSilentSwitch` prop, shown below.
 
 <details>
   <summary>tvOS</summary>
-  
+
 `react-native link react-native-video` doesn’t work properly with the tvOS target so we need to add the library manually.
 
 First select your project in Xcode.
@@ -211,6 +211,8 @@ var styles = StyleSheet.create({
 * [allowsExternalPlayback](#allowsexternalplayback)
 * [audioOnly](#audioonly)
 * [bufferConfig](#bufferconfig)
+* [fullscreen](#fullscreen)
+* [fullscreenOrientation](#fullscreenorientation)
 * [ignoreSilentSwitch](#ignoresilentswitch)
 * [muted](#muted)
 * [paused](#paused)
@@ -333,6 +335,21 @@ An image to display while the video is loading
 
 Platforms: all
 
+#### fullscreen
+Controls whether the player enters fullscreen on play.
+* **false (default)** - Don't display the video in fullscreen
+* **true** - Display the video in fullscreen
+
+Platforms: iOS
+
+#### fullscreenOrientation
+
+* **all (default)** -
+* **landscape**
+* **portrait**
+
+Platforms: iOS
+
 #### posterResizeMode
 Determines how to resize the poster image when the frame doesn't match the raw video dimensions.
 * **"contain" (default)** - Scale the image uniformly (maintain the image's aspect ratio) so that both dimensions (width and height) of the image will be equal to or less than the corresponding dimension of the view (minus padding).
@@ -352,7 +369,7 @@ Default: 250.0
 Platforms: all
 
 ### rate
-Speed at which the media should play. 
+Speed at which the media should play.
 * **0.0** - Pauses the video
 * **1.0** - Play at normal speed
 * **Other values** - Slow down or speed up playback
@@ -433,7 +450,7 @@ Type | Value | Description
 "language" | string | Display the text track with the language specified as the Value, e.g. "fr"
 "index" | number | Display the text track with the index specified as the value, e.g. 0
 
-Both iOS & Android (only 4.4 and higher) offer Settings to enable Captions for hearing impaired people. If "system" is selected and the Captions Setting is enabled, iOS/Android will look for a caption that matches that customer's language and display it. 
+Both iOS & Android (only 4.4 and higher) offer Settings to enable Captions for hearing impaired people. If "system" is selected and the Captions Setting is enabled, iOS/Android will look for a caption that matches that customer's language and display it.
 
 If a track matching the specified Type (and Value if appropriate) is unavailable, no text track will be displayed. If multiple tracks match the criteria, the first match will be used.
 
@@ -554,7 +571,7 @@ textTracks | array | An array of text track info objects with the following prop
 
 Example:
 ```
-{ 
+{
   canPlaySlowForward: true,
   canPlayReverse: false,
   canPlaySlowReverse: false,
