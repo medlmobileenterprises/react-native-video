@@ -1,9 +1,9 @@
-#import <React/RCTView.h>
 #import <AVFoundation/AVFoundation.h>
 #import "AVKit/AVKit.h"
 #import "UIView+FindUIViewController.h"
 #import "RCTVideoPlayerViewController.h"
 #import "RCTVideoPlayerViewControllerDelegate.h"
+#import <React/RCTComponent.h>
 
 @class RCTEventDispatcher;
 
@@ -17,6 +17,7 @@
 @property (nonatomic, copy) RCTBubblingEventBlock onVideoSeek;
 @property (nonatomic, copy) RCTBubblingEventBlock onVideoEnd;
 @property (nonatomic, copy) RCTBubblingEventBlock onTimedMetadata;
+@property (nonatomic, copy) RCTBubblingEventBlock onVideoAudioBecomingNoisy;
 @property (nonatomic, copy) RCTBubblingEventBlock onVideoFullscreenPlayerWillPresent;
 @property (nonatomic, copy) RCTBubblingEventBlock onVideoFullscreenPlayerDidPresent;
 @property (nonatomic, copy) RCTBubblingEventBlock onVideoFullscreenPlayerWillDismiss;

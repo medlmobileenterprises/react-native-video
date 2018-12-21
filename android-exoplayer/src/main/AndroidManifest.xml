@@ -5,7 +5,8 @@
         android:supportsRtl="true">
         <activity
             android:name="com.brentvatne.exoplayer.CustomFullscreenPlayer"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape">
         </activity>
     </application>
 </manifest>
