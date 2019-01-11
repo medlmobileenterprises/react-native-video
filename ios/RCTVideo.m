@@ -120,10 +120,10 @@ static int const RCTVideoUnset = -1;
     
     UIView *contentView = [viewController.view valueForKey:@"contentView"];
     contentView.gestureRecognizers = [contentView.gestureRecognizers filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id  _Nullable evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
-        if ([evaluatedObject isKindOfClass:UITapGestureRecognizer.class]) {
-            return YES;
+        if ([evaluatedObject isKindOfClass:UIPinchGestureRecognizer.class]) {
+            return NO;
         }
-        return NO;
+        return YES;
     }]];
     
     return viewController;
