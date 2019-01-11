@@ -117,6 +117,15 @@ static int const RCTVideoUnset = -1;
     viewController.view.frame = self.bounds;
     viewController.player = player;
     viewController.view.frame = self.bounds;
+    
+    UIView *contentView = [viewController.view valueForKey:@"contentView"];
+    contentView.gestureRecognizers = [contentView.gestureRecognizers filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id  _Nullable evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+        if ([evaluatedObject isKindOfClass:UITapGestureRecognizer.class]) {
+            return YES;
+        }
+        return NO;
+    }]];
+    
     return viewController;
 }
 
