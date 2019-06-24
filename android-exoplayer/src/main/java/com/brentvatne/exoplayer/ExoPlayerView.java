@@ -18,8 +18,6 @@ import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.metadata.Metadata;
-import com.google.android.exoplayer2.metadata.MetadataRenderer;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.text.Cue;
 import com.google.android.exoplayer2.text.TextRenderer;
@@ -40,7 +38,8 @@ public final class ExoPlayerView extends FrameLayout {
     private Context context;
     private ViewGroup.LayoutParams layoutParams;
 
-    private boolean useTextureView = false;
+    private boolean useTextureView = true;
+    private boolean hideShutterView = false;
 
     public ExoPlayerView(Context context) {
         this(context, null);
@@ -53,7 +52,6 @@ public final class ExoPlayerView extends FrameLayout {
     public ExoPlayerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        boolean useTextureView = false;
         this.context = context;
 
         layoutParams = new ViewGroup.LayoutParams(
@@ -77,7 +75,6 @@ public final class ExoPlayerView extends FrameLayout {
         subtitleLayout.setLayoutParams(layoutParams);
         subtitleLayout.setUserDefaultStyle();
         subtitleLayout.setUserDefaultTextSize();
-
 
         updateSurfaceView();
 
@@ -110,6 +107,10 @@ public final class ExoPlayerView extends FrameLayout {
         }
     }
 
+    private void updateShutterViewVisibility() {
+        shutterView.setVisibility(this.hideShutterView ? View.INVISIBLE : View.VISIBLE);
+    }
+
     /**
      * Set the {@link SimpleExoPlayer} to use. The {@link SimpleExoPlayer#setTextOutput} and
      * {@link SimpleExoPlayer#setVideoListener} method of the player will be called and previous
@@ -126,7 +127,6 @@ public final class ExoPlayerView extends FrameLayout {
             this.player.setVideoListener(null);
             this.player.removeListener(componentListener);
             this.player.setVideoSurface(null);
-            this.player.setMetadataOutput(componentListener);
         }
         this.player = player;
         shutterView.setVisibility(VISIBLE);
@@ -135,7 +135,6 @@ public final class ExoPlayerView extends FrameLayout {
             player.setVideoListener(componentListener);
             player.addListener(componentListener);
             player.setTextOutput(componentListener);
-            player.setMetadataOutput(componentListener);
         }
     }
 
@@ -163,8 +162,15 @@ public final class ExoPlayerView extends FrameLayout {
     }
 
     public void setUseTextureView(boolean useTextureView) {
-        this.useTextureView = useTextureView;
-        updateSurfaceView();
+        if (useTextureView != this.useTextureView) {
+            this.useTextureView = useTextureView;
+            updateSurfaceView();
+        }
+    }
+
+    public void setHideShutterView(boolean hideShutterView) {
+        this.hideShutterView = hideShutterView;
+        updateShutterViewVisibility();
     }
 
     private final Runnable measureAndLayout = new Runnable() {
@@ -194,7 +200,7 @@ public final class ExoPlayerView extends FrameLayout {
     }
 
     private final class ComponentListener implements SimpleExoPlayer.VideoListener,
-            TextRenderer.Output, ExoPlayer.EventListener, MetadataRenderer.Output {
+            TextRenderer.Output, ExoPlayer.EventListener {
 
         // TextRenderer.Output implementation
 
@@ -224,6 +230,11 @@ public final class ExoPlayerView extends FrameLayout {
         // ExoPlayer.EventListener implementation
 
         @Override
+        public void onLoadingChanged(boolean isLoading) {
+            // Do nothing.
+        }
+
+        @Override
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
             // Do nothing.
         }
@@ -234,10 +245,7 @@ public final class ExoPlayerView extends FrameLayout {
         }
 
         @Override
-        public void onPositionDiscontinuity(int i) {}
-
-        @Override
-        public void onLoadingChanged(boolean isLoading) {
+        public void onPositionDiscontinuity(int reason) {
             // Do nothing.
         }
 
@@ -254,11 +262,6 @@ public final class ExoPlayerView extends FrameLayout {
         @Override
         public void onPlaybackParametersChanged(PlaybackParameters params) {
             // Do nothing
-        }
-
-	      @Override
-        public void onMetadata(Metadata metadata) {
-            Log.d("onMetadata", "onMetadata");
         }
 
         @Override
