@@ -246,6 +246,7 @@ class ReactExoplayerView extends FrameLayout implements
 
     @Override
     public void onHostResume() {
+    if (player == null) return;
 	if (FULLSCREEN_TIMESTAMP != 0 && FULLSCREEN_TIMESTAMP > player.getCurrentPosition()) {
             player.seekTo(FULLSCREEN_TIMESTAMP);
         }
