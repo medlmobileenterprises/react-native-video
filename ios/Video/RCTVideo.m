@@ -619,6 +619,7 @@ static int const RCTVideoUnset = -1;
         NSObject *width = @"undefined";
         NSObject *height = @"undefined";
         NSString *orientation = @"undefined";
+        int rotationDegrees = 0;
         
         if ([_playerItem.asset tracksWithMediaType:AVMediaTypeVideo].count > 0) {
           AVAssetTrack *videoTrack = [[_playerItem.asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
@@ -632,6 +633,12 @@ static int const RCTVideoUnset = -1;
           {
             orientation = @"landscape";
           } else {
+            orientation = @"portrait";
+          }
+          double angle = atan2(preferredTransform.b, preferredTransform.a);
+          rotationDegrees = angle * 180 / M_PI;
+          // confirm if video is in portrait by checking the degrees
+          if (rotationDegrees == 90 || rotationDegrees == 270) {
             orientation = @"portrait";
           }
         }
@@ -648,7 +655,8 @@ static int const RCTVideoUnset = -1;
                              @"naturalSize": @{
                                  @"width": width,
                                  @"height": height,
-                                 @"orientation": orientation
+                                 @"orientation": orientation,
+                                 @"rotationDegrees": [NSNumber numberWithInt:rotationDegrees]
                                  },
                              @"audioTracks": [self getAudioTrackInfo],
                              @"textTracks": [self getTextTrackInfo],
